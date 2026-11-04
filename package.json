@@ -1,0 +1,31 @@
+{
+  "name": "portfoliodetective",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Portfolio Detective: a film noir detective interrogates designers about their projects and hands back finished portfolio cases.",
+  "type": "module",
+  "workspaces": [
+    "packages/core",
+    "packages/render",
+    "packages/server"
+  ],
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env packages/server/src/main.ts",
+    "start": "tsx --env-file-if-exists=.env packages/server/src/main.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "render:sample": "tsx packages/render/src/cli.ts",
+    "fixtures": "tsx scripts/make-fixtures.ts",
+    "new-friend": "tsx scripts/new-friend.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

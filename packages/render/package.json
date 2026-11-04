@@ -1,0 +1,14 @@
+{
+  "name": "@pd/render",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@pd/core": "*",
+    "jszip": "^3.10.2",
+    "playwright": "1.63.0"
+  }
+}

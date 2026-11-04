@@ -62,7 +62,7 @@ describe("connector", () => {
   });
 
   it("ships the detective's character as server instructions", () => {
-    expect(client.getInstructions()).toContain("Zé Calha");
+    expect(client.getInstructions()).toContain("Toni Sarjeta");
     expect(client.getInstructions()).toContain("Never invent metrics");
   });
 

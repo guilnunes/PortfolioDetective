@@ -13,7 +13,7 @@ Spec of record: Notion, Projects database, row "Portfolio Detective". Update it 
 ## Language
 
 - Interface default is Brazilian Portuguese, English available. Every user-facing string needs both.
-- Detective names: Zé Calha (PT-BR), Jack Gutter (EN). A deliberate cliché, kept light.
+- Detective names: Toni Sarjeta (PT-BR), Jack Gutter (EN). A deliberate cliché, kept light.
 - No em dash characters in user-facing copy (detective lines, questions, pages). Tests check the questions.
 - Code, comments, docs and the harness layer (headers, labels, property names) are in English.
 

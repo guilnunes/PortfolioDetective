@@ -2,7 +2,7 @@ import type { Lang } from "./schema.ts";
 import type { Localized } from "./chapters.ts";
 
 export const DETECTIVE_NAME: Localized = {
-  "pt-BR": "Zé Calha",
+  "pt-BR": "Toni Sarjeta",
   en: "Jack Gutter",
 };
 

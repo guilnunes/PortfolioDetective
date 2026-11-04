@@ -2,7 +2,7 @@
 
 A film noir detective interrogates designers about their projects and hands back finished portfolio cases.
 
-Zé Calha (Jack Gutter in English) sits across the desk, asks short questions about your "case" chapter by chapter, presses for details, and closes the case with a Behance-ready pack. The AI that plays him is the one you bring: your own Claude plan through the connector, or your own API key in the web app (coming later).
+Toni Sarjeta (Jack Gutter in English) sits across the desk, asks short questions about your "case" chapter by chapter, presses for details, and closes the case with a Behance-ready pack. The AI that plays him is the one you bring: your own Claude plan through the connector, or your own API key in the web app (coming later).
 
 Spec and decisions live in Notion (Projects > Portfolio Detective).
 

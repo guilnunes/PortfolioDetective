@@ -67,7 +67,7 @@ describe("case", () => {
 
 describe("detective", () => {
   it("has a name per language and keeps the honesty rules in the brief", () => {
-    expect(detectiveBrief("pt-BR")).toContain("Zé Calha");
+    expect(detectiveBrief("pt-BR")).toContain("Toni Sarjeta");
     expect(detectiveBrief("en")).toContain("Jack Gutter");
     expect(detectiveBrief("en", "facts")).toContain("just the facts");
     expect(detectiveBrief("en")).toContain("Never invent metrics");

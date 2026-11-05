@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio Detective</title>
+<style>
+:root{--ink:#121212;--smoke:#1d1d1d;--paper:#ECE7DE;--manila:#D9C29A;--manila-dark:#B89E72;--rose:#E3B7A0;--sage:#B9C4B0;--stamp:#8E3B2F;--muted:#B5AFA6}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--paper);font-family:"Courier New",Courier,monospace}
+body{padding:16px;background-image:repeating-linear-gradient(180deg,rgba(255,255,255,.035) 0 14px,transparent 14px 38px)}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid #333;padding-bottom:10px;margin-bottom:12px}
+h1{font-family:Georgia,serif;font-size:22px;margin:0;letter-spacing:.02em}
+#who{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+#status{margin:0 0 12px;min-height:1.4em;color:var(--manila)}
+#strip{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x proximity}
+.print{flex:0 0 auto;width:160px;margin:0;background:var(--paper);padding:8px 8px 6px;color:var(--ink);box-shadow:0 8px 18px rgba(0,0,0,.5);scroll-snap-align:start}
+.print:nth-child(odd){transform:rotate(-1deg)}.print:nth-child(even){transform:rotate(1deg)}
+.print img{width:100%;height:110px;object-fit:cover;object-position:top;display:block;background:#ccc}
+.print figcaption{font-size:11px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.print.bad{outline:3px solid var(--stamp)}
+#issues{background:var(--manila);color:var(--ink);padding:12px 14px;border-radius:2px 10px 4px 4px;margin-top:6px}
+#issues:empty{display:none}
+#issues h2{font-family:Georgia,serif;font-size:16px;margin:0 0 6px}
+#issues ul{margin:0;padding-left:18px}#issues li{margin:3px 0;font-size:13px}
+#issues li.error{color:var(--stamp);font-weight:700}
+#issues p{margin:0}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+button{font:inherit;background:var(--paper);color:var(--ink);border:0;padding:10px 14px;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+button:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+#notify{background:var(--rose)}
+#stage{position:absolute;left:-200000px;top:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.print{transform:none!important}}
+</style>
+</head>
+<body>
+<header><h1 id="room">Sala de revelação</h1><span id="who">Toni Sarjeta</span></header>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="strip" aria-label="Prints"></div>
+<section id="issues" aria-live="polite"></section>
+<div class="actions"><button id="again" type="button">Revelar de novo</button><button id="notify" type="button" hidden>Avisar o Toni</button></div>
+<div id="stage" aria-hidden="true"></div>
+<script type="module">/*BUNDLE*/</script>
+</body>
+</html>

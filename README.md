@@ -2,62 +2,65 @@
 
 A film noir detective interrogates designers about their projects and hands back finished portfolio cases.
 
-Toni Sarjeta (Jack Gutter in English) sits across the desk, asks short questions about your "case" chapter by chapter, presses for details, and closes the case with a Behance-ready pack. The AI that plays him is the one you bring: your own Claude plan through the connector, or your own API key in the web app (coming later).
+Toni Sarjeta (Jack Gutter in English) sits across the desk, asks short questions about your "case" chapter by chapter, presses for details, and closes the case with a Behance-ready pack. He runs inside Claude as a connector, so each friend uses their own Claude plan. No paid AI usage, ever.
 
 Spec and decisions live in Notion (Projects > Portfolio Detective).
 
-## What works today
+## How it fits together
 
-- **Case model and script** (`packages/core`): 11 chapters with noir names, questions in PT-BR and EN, full noir or "só os fatos" mode, versioned reports, loose ends per output, NDA alias, the detective's character brief.
-- **Renderer and harness** (`packages/render`): modules written as HTML and CSS are rendered to Behance sizes (cover 808x632 at 2x, sections 1400px wide) and checked automatically for contrast, small text, overflow, external resources, missing or confidential evidence, height and file size. Packs a ZIP with numbered images, `copy.md` to paste into Behance and publishing steps.
-- **Claude connector** (`packages/server`): a remote MCP server (Streamable HTTP). Claude plays the detective from the server instructions, and also acts as art director and critic: it reads the guide, writes the layout, renders it, looks at the images, fixes, and closes the case.
-- **Evidence upload page**: a signed link opens a noir upload page where the client drops images.
-- **Claude Design brief**: level 1 of the integration ladder, a prompt pack to paste into Claude Design.
-- **Skills** (`skills/`): art direction guidance for landing page cases, and the Behance build, render and critique loop with its rubric.
+```
+Claude (web, desktop, mobile)
+  ├─ plays Toni Sarjeta from the connector's instructions
+  ├─ calls the connector's tools: interrogation, evidence, layout, review, export
+  └─ shows the darkroom view (MCP App): draws every Behance image in the user's browser,
+     checks quality, and files the images back on the server
 
-Not yet: Firebase storage and OAuth, interactive MCP App views, the web app, standalone site export.
-
-## Run it locally
-
-```bash
-npm install
-cp .env.example .env              # then fill PD_SECRET and PD_USERS
-npm run new-friend -- friend1 "Friend One"   # prints a token and the PD_USERS entry
-npm start                          # http://localhost:8787/mcp
+PHP server on HostGator shared hosting (php/)
+  ├─ /mcp            MCP connector over Streamable HTTP, stateless, JSON responses
+  ├─ /evidence/...   noir upload page for screenshots, through signed links
+  ├─ /files/...      Behance pack downloads (ZIP), through signed links
+  └─ MySQL for cases, disk for images, outside the web root
 ```
 
-To render the fictional sample case (Maré Cold Brew) into `out/sample`:
+Shared hosting can't run Node or a headless browser, so the images are drawn inside Claude's view instead of on the server. The TypeScript packages stay the source of truth: `npm run build:php` exports the chapters, Toni's lines and briefs, the skills and the Behance specs to `php/data/core.json`, bundles the view into `php/resources/studio.html`, and copies the sample case.
 
-```bash
-npm run render:sample
-```
-
-## Connect it to Claude
-
-The server needs a public HTTPS address (see Deploy). Then, in Claude:
-
-1. Settings > Connectors > Add custom connector.
-2. URL: `https://<your-host>/mcp`.
-3. Request headers: `Authorization: Bearer <your token>`.
-4. Start a chat: "Quero abrir um caso."
-
-## Deploy
-
-The `Dockerfile` uses the official Playwright image, so the headless browser is included. Any container host with HTTPS works (Cloud Run, Fly.io, Railway, a VPS). Set `PD_PUBLIC_URL`, `PD_SECRET`, `PD_USERS` and mount a volume at `PD_DATA_DIR`.
-
-## Tests
-
-```bash
-npm test          # unit, render and full connector flow
-npm run typecheck
-```
-
-## Layout
+## Packages
 
 ```
 packages/core      case schema, chapters, detective, loose ends, Claude Design brief, sample case
-packages/render    Behance specs, module page, renderer with quality checks, baseline layout, pack
-packages/server    MCP connector, tools, auth, file store, upload page
+packages/render    Behance specs, Node renderer with quality checks, baseline layout, pack (reference and tests)
+packages/server    Node version of the connector (reference; needs a host with Node)
+packages/view      the darkroom MCP App: draws modules in the browser, same quality checks
+php/               the HostGator build: connector, upload page, downloads
 skills/            art direction guidance read by the AI
-scripts/           fixtures and helper scripts
+scripts/           build, deploy, fixtures, tokens
 ```
+
+## Develop
+
+```bash
+npm install
+npm run build:php    # regenerate php/data, php/resources, php/fixtures
+npm test             # core, Node renderer, Node connector, PHP connector with the darkroom in Chromium
+npm run typecheck
+```
+
+## Deploy to HostGator
+
+Everything goes through the cPanel API with an API token. No FTP, no SSH.
+
+```bash
+export CPANEL_HOST=... CPANEL_USER=... CPANEL_TOKEN=... PD_DOMAIN=example.com PD_SUBDOMAIN=detetive
+export PD_USERS="token:friend1:Friend One"     # create tokens with: npm run new-friend -- friend1 "Friend One"
+npm run deploy -- --setup   # first time: MySQL database, subdomain, SSL, config.php, files
+npm run deploy              # later: code only
+```
+
+After the first setup, pushes to `main` deploy automatically once the cPanel secrets are set in the repository (see `.github/workflows/ci.yml`).
+
+## Connect it to Claude
+
+1. Settings > Connectors > Add custom connector.
+2. URL: `https://detetive.<domain>/mcp`.
+3. Request header `Authorization: Bearer <token>`. If the header option isn't there, use `https://detetive.<domain>/mcp?key=<token>`.
+4. Start a chat: "Quero abrir um caso." To try the darkroom right away: "Abre o caso de exemplo e monta o Behance."

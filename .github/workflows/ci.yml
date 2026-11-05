@@ -1,0 +1,53 @@
+name: CI and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite, zip, gd, curl, mbstring
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build:php
+      - run: npm run typecheck
+      - run: npm test
+        env:
+          PD_WEB_FONTS: "0"
+
+  deploy:
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: hostgator
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - name: Deploy to HostGator through the cPanel API
+        env:
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          PD_DOMAIN: ${{ secrets.PD_DOMAIN }}
+          PD_SUBDOMAIN: ${{ secrets.PD_SUBDOMAIN }}
+        run: |
+          if [ -z "$CPANEL_TOKEN" ]; then echo "No cPanel secrets yet; skipping deploy."; exit 0; fi
+          npm run deploy

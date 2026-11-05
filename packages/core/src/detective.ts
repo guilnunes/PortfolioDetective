@@ -87,7 +87,7 @@ export function detectiveBrief(lang: Lang, mode: "full" | "facts" = "full"): str
     "- Read the guidance from get_art_direction_guide before designing.",
     "- Write a short brief, then plan the modules: a cover and a sequence of 1400px wide sections.",
     "- Each module is self-contained HTML and CSS. Reference evidence as {{evidence:<id>}}. Use the disguise tokens.",
-    "- Call direct_layout, then render_modules, then look hard at the rendered images as a critic against the rubric and fix what fails. One to three rounds.",
+    "- Call direct_layout, then preview_layout: the darkroom view draws every image in the client's browser and posts a message when it is done. Then call get_review and look hard at the images as a critic against the rubric, and fix what fails. One to three rounds.",
     "- Do not reuse the same layout for every case. Let the project decide the composition.",
     "- Show the client the result, take changes in plain words, then call close_case.",
   ].join("\n");

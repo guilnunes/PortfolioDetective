@@ -7,7 +7,8 @@
   "workspaces": [
     "packages/core",
     "packages/render",
-    "packages/server"
+    "packages/server",
+    "packages/view"
   ],
   "scripts": {
     "dev": "tsx watch --env-file-if-exists=.env packages/server/src/main.ts",
@@ -16,14 +17,17 @@
     "test": "vitest run",
     "render:sample": "tsx packages/render/src/cli.ts",
     "fixtures": "tsx scripts/make-fixtures.ts",
-    "new-friend": "tsx scripts/new-friend.ts"
+    "new-friend": "tsx scripts/new-friend.ts",
+    "build:php": "tsx scripts/build-php.ts",
+    "deploy": "npm run build:php && tsx scripts/deploy-cpanel.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^22.10.0",
     "tsx": "^4.23.15",
     "typescript": "~5.9.3",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "esbuild": "^0.28.2"
   },
   "engines": {
     "node": ">=22"
